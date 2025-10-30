@@ -12,18 +12,23 @@ class Stack:
         self.top = top
         self.stack_size = stack_size
         self.counter = 0
+        self.master_branch = True  # Новая строка
 
     def push(self, data):
-        if self.counter < self.stack_size:
-            new_node = Node(data)
-            new_node.next_node = self.top
-            self.top = new_node
-            self.counter += 1
-        else:
-            print(f'Stack overflow! Max items: {self.stack_size}')
+        'Push method - MASTER BRANCH VERSION'
+        if self.counter >= self.stack_size:
+            print(f'MASTER: Stack overflow! Max: {self.stack_size}')
             return None
 
+        new_node = Node(data)
+        new_node.next_node = self.top
+        self.top = new_node
+        self.counter += 1
+        return f'MASTER: Pushed {data}'
+
     def pop(self):
+        if self.is_empty():
+            return 'MASTER: Stack is empty'
         remove_last = self.top
         self.top = self.top.next_node
         self.counter -= 1
@@ -31,18 +36,22 @@ class Stack:
 
     @staticmethod
     def counter_int(stack):
-        if isinstance(stack, Stack):
-            temp_stack = copy.deepcopy(stack)
-            counter_int = 0
-            while not temp_stack.is_empty():
-                if isinstance(temp_stack.top.data, int):
-                    counter_int += 1
-                temp_stack.pop()
-            return counter_int
-        print(f'Объект неподходящего класса')
-        return None
+        'Static method - MASTER VERSION'
+        if not isinstance(stack, Stack):
+            print('MASTER: Invalid stack object')
+            return -1
+
+        temp_stack = copy.deepcopy(stack)
+        counter = 0
+        while not temp_stack.is_empty():
+            data = temp_stack.pop()
+            if isinstance(data, int):
+                counter += 1
+        return counter
 
     def is_empty(self):
-        if not self.top:
-            return True
-        return False
+        return self.top is None
+
+    def get_info(self):
+        'New method only in master branch'
+        return f'Master Stack: {self.counter}/{self.stack_size} items'
